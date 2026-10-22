@@ -1,0 +1,5 @@
+Latitude: -20.13896636186822
+Longitude: -44.89344692699547
+Precisão: 135.0 metros
+Data e hora: 22/10/2026, 20:20:09
+Mapa: https://www.google.com/maps?q=-20.13896636186822,-44.89344692699547

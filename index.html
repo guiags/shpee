@@ -1,0 +1,30 @@
+
+<button onclick="salvarCoordenadas()">Salvar coordenadas</button>
+<p id="status"></p>
+
+<script>
+async function salvarCoordenadas() {
+  const status = document.getElementById("status");
+
+  navigator.geolocation.getCurrentPosition(async pos => {
+    try {
+      const resposta = await fetch("/salvar", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude
+        })
+      });
+
+      if (!resposta.ok) throw new Error();
+
+      status.textContent = "coordenadas.txt salvo na pasta do site!";
+    } catch {
+      status.textContent = "Não foi possível salvar o arquivo.";
+    }
+  }, () => {
+    status.textContent = "Autorize o acesso à localização.";
+  }, { enableHighAccuracy: true });
+}
+</script>
