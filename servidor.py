@@ -26,6 +26,13 @@ class Handler(SimpleHTTPRequestHandler):
             lat = float(dados["latitude"])
             lon = float(dados["longitude"])
 
+            print(f"Latitude: {lat}", flush=True)
+            print(f"Longitude: {lon}", flush=True)
+            print(
+                f"Mapa: https://www.google.com/maps?q={lat},{lon}",
+                flush=True
+            )
+            
             if not (-90 <= lat <= 90 and -180 <= lon <= 180):
                 self.send_error(400, "Coordenadas inválidas")
                 return
