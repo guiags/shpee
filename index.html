@@ -1,39 +1,53 @@
-<p id="status"> </p>
 
-<script>
-async function salvarCoordenadas() {
-  const status = document.getElementById("status");
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Localização</title>
+</head>
+<body>
+  <h2>Localização</h2>
+  <p id="status">  </p>
 
-  if (!navigator.geolocation) {
-    status.textContent = "Geolocalização não suportada.";
-    return;
-  }
+  <script>
+    async function salvarCoordenadas() {
+      const status = document.getElementById("status");
 
-  navigator.geolocation.getCurrentPosition(async pos => {
-    try {
-      const resposta = await fetch("/salvar", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude
-        })
+      if (!navigator.geolocation) {
+        status.textContent = "Geolocalização não suportada.";
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(async pos => {
+        try {
+          const resposta = await fetch("/salvar", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+              latitude: pos.coords.latitude,
+              longitude: pos.coords.longitude
+            })
+          });
+
+          if (!resposta.ok) {
+            throw new Error("HTTP " + resposta.status);
+          }
+
+          status.textContent = "Coordenadas salvas com sucesso!";
+        } catch (erro) {
+          status.textContent = "Erro ao salvar: " + erro.message;
+        }
+      }, erro => {
+        status.textContent =
+          "Não foi possível obter a localização. Verifique a permissão.";
+      }, {
+        enableHighAccuracy: true,
+        timeout: 15000
       });
-
-      if (!resposta.ok) throw new Error();
-
-      status.textContent = "Coordenadas salvas com sucesso!";
-    } catch {
-      status.textContent = "Não foi possível salvar as coordenadas.";
     }
-  }, () => {
-    status.textContent = "Permita o acesso à localização.";
-  }, {
-    enableHighAccuracy: true,
-    timeout: 15000
-  });
-}
 
-// Executa automaticamente ao abrir a página
-window.addEventListener("load", salvarCoordenadas);
-</script>
+    window.addEventListener("load", salvarCoordenadas);
+  </script>
+</body>
+</html>
