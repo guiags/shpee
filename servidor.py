@@ -78,14 +78,19 @@ class Handler(SimpleHTTPRequestHandler):
         return True
 
     def do_GET(self):
-        caminho = urlparse(self.path).path
+    caminho = urlparse(self.path).path
 
-        if caminho != "/coordenadas":
-            self.send_error(404)
-            return
+    # Página inicial do site
+    if caminho == "/":
+        return super().do_GET()
 
-        if not self.autorizado():
-            return
+    # Página protegida para consultar coordenadas
+    if caminho != "/coordenadas":
+        self.send_error(404)
+        return
+
+    if not self.autorizado():
+        return
 
         try:
             with conectar() as conn:
