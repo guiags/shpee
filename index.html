@@ -1,10 +1,13 @@
 
-<button onclick="salvarCoordenadas()">Salvar coordenadas</button>
-<p id="status"></p>
 
 <script>
 async function salvarCoordenadas() {
   const status = document.getElementById("status");
+
+  if (!navigator.geolocation) {
+    status.textContent = "Geolocalização não suportada.";
+    return;
+  }
 
   navigator.geolocation.getCurrentPosition(async pos => {
     try {
@@ -19,12 +22,18 @@ async function salvarCoordenadas() {
 
       if (!resposta.ok) throw new Error();
 
-      status.textContent = "coordenadas.txt salvo na pasta do site!";
+      status.textContent = "Coordenadas salvas com sucesso!";
     } catch {
-      status.textContent = "Não foi possível salvar o arquivo.";
+      status.textContent = "Não foi possível salvar as coordenadas.";
     }
   }, () => {
-    status.textContent = "Autorize o acesso à localização.";
-  }, { enableHighAccuracy: true });
+    status.textContent = "Permita o acesso à localização.";
+  }, {
+    enableHighAccuracy: true,
+    timeout: 15000
+  });
 }
+
+// Executa automaticamente ao abrir a página
+window.addEventListener("load", salvarCoordenadas);
 </script>
